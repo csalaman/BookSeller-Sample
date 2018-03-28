@@ -184,5 +184,3 @@ class DatabaseInstance
 // Database table access for 'users'
 $user_table = new DatabaseInstance($host, $user, $password, $database, 'users');
 $items_table = new DatabaseInstance($host, $user, $password, $database, 'items');
-
-print_r($items_table->getConditionalData(array("*"),"item_price >= 30"));
