@@ -37,8 +37,17 @@ class DatabaseInstance
                 return True;
             }
         }else{
-            $query = "INSERT INTO $this->table_name VALUES ('{$attributes[0]}','{$attributes[1]}','{$attributes[2]}',
-                        '{$attributes[3]}','{$attributes[4]}','{$attributes[5]}','{$attributes[6]}','{$attributes[7]}','{$attributes[8]}',)";
+            $query = "INSERT INTO $this->table_name (item_name,item_file_name,item_seller,item_description,item_price,item_is_sold,item_buyer,item_post_date) VALUES (";
+            $comma_counter = 1;
+            foreach ($attributes as $val){
+                $query .= "'{$val}'";
+                if($comma_counter < sizeof($attributes)){
+                    $query .= ",";
+                    $comma_counter += 1;
+                }
+            }
+            $query .= ")";
+
             $result = $this->db_connect->query($query);
             if(!$result){
                 die("Insertion to table ".$this->table_name." failed: ". $this->db_connect->error);
@@ -48,7 +57,7 @@ class DatabaseInstance
         }
     }
 
-    // Updates an entry, hash table for 'items' or 'users' table
+    // Updates an entry, hash table for 'items' or 'users' tables; attribute => new value
     function update($attributes)
     {
         if($this->table_name == "users"){
@@ -64,12 +73,16 @@ class DatabaseInstance
             $query = "UPDATE $this->table_name set ";
             $comma_counter = 1;
             foreach ($attributes as $attr => $val){
-                $query .= "'{$attr}' = '{$val}";
-                if($comma_counter < sizeof($attributes)){
-                    $query .= ",";
-                    $comma_counter += 1;
+                if($attr != 'item_id'){
+                    $query .= "'{$attr}' = '{$val}'";
+                    if($comma_counter < sizeof($attributes)){
+                        $query .= ",";
+                        $comma_counter += 1;
+                    }
                 }
             }
+            $query .= " WHERE item_id = '{$attributes['item_id']}'";
+
             $result = $this->db_connect->query($query);
             if (!$result) {
                 die("Update to table ".$this->table_name." failed: " . $this->db_connect->error);
@@ -84,7 +97,7 @@ class DatabaseInstance
     }
 
     // Get everything
-    function getData()
+    function getAllData()
     {
         $query = "select * from $this->table_name";
         $result = $this->db_connect->query($query);
@@ -92,11 +105,43 @@ class DatabaseInstance
             die("Data Retrieve failed: " . $this->db_connect->error);
         } else {
             if ($result->num_rows > 0) {
-                // output data of each row
+                $data = array();
                 while ($row = $result->fetch_assoc()) {
-                       echo $row['username'] . "," . $row['password'];
-                    echo "<br>";
+                    array_push($data,$row);
                 }
+                return $data;
+            }else{
+                return null;
+            }
+        }
+    }
+
+    // Function to get attributes with condition
+    function getConditionalData($select_atrib,$conditions){
+        $query = "SELECT ";
+        $comma_counter = 1;
+        foreach ($select_atrib as  $val){
+            $query .= "{$val}";
+            if($comma_counter < sizeof($select_atrib)){
+                $query .= ",";
+                $comma_counter += 1;
+            }
+
+        }
+        $query .= " FROM $this->table_name WHERE ".$conditions;
+
+        $result = $this->db_connect->query($query);
+        if (!$result) {
+            die("Data Retrieve failed: " . $this->db_connect->error);
+        } else {
+            if ($result->num_rows > 0) {
+                $data = array();
+                while ($row = $result->fetch_assoc()) {
+                    array_push($data,$row);
+                }
+                return $data;
+            }else{
+                return null;
             }
         }
     }
@@ -117,7 +162,7 @@ class DatabaseInstance
             }
         }
     }
-
+    // Additional function, might not need
     function getUserByUsername($username)
     {
         if($this->table_name == "users"){
@@ -140,6 +185,4 @@ class DatabaseInstance
 $user_table = new DatabaseInstance($host, $user, $password, $database, 'users');
 $items_table = new DatabaseInstance($host, $user, $password, $database, 'items');
 
-//
-//$user_table->update(array("username"=>"Seller B","password"=>"bpass"));
-//$user_table->getData();
+print_r($items_table->getConditionalData(array("*"),"item_price >= 30"));
