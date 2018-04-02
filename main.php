@@ -9,8 +9,8 @@ require_once("support.php");
 require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
 
-$database = new DatabaseInstance($host, $user, $password, $database, "items");
-$data = $database->getAllData();
+
+$data = $items_table->getAllData();
 
 $bookList = "";
 foreach($data as $item) {
