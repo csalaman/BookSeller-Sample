@@ -177,6 +177,21 @@ class DatabaseInstance
             return null;
         }
     }
+    
+    function getItemById($id)
+    {
+        if($this->table_name == "items"){
+            $query = "SELECT * FROM items WHERE item_id = '{$id}'";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Unable to retrieve item id: " . $this->db_connect->error);
+            } else {
+                return $result->fetch_assoc();
+            }
+        } else {
+            return null;
+        }
+    }
 
 
 }

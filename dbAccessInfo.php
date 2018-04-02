@@ -6,10 +6,6 @@
  * Time: 9:46 PM
  */
 
-
-
-
-
 // Log in information for database
 $host = "localhost";
 $user = "bookSellerAdmin";
