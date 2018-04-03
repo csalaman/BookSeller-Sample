@@ -9,20 +9,40 @@ require_once("support.php");
 require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
 
-
-$data = $items_table->getAllData();
-
 $bookList = "";
-foreach($data as $item) {
-    $name = $item['item_name'];
-    $desc = $item['item_description'];
-    $id = $item['item_id'];
-    $bookList .= <<<EOBODY
-        <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
+
+if(isset($_POST["search"])) {
+    $search = $_POST["srch-term"];
+    $data = $items_table->getItemsWithSearch($search);
+    if(!$data) {
+        $bookList .= "No results returned";
+    } else {
+        foreach($data as $item) {
+            $name = $item['item_name'];
+            $desc = $item['item_description'];
+            $id = $item['item_id'];
+            $bookList .= <<<EOBODY
+                <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
                     <p class="mb-1">$desc</p>
-        </a>
+                </a>
 EOBODY;
+        }
+    }
+    
+} else {
+    $data = $items_table->getAllData();
+    foreach($data as $item) {
+        $name = $item['item_name'];
+        $desc = $item['item_description'];
+        $id = $item['item_id'];
+        $bookList .= <<<EOBODY
+            <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
+                <p class="mb-1">$desc</p>
+            </a>
+EOBODY;
+    }
 }
 
 $page = <<<EOBODY
@@ -80,11 +100,11 @@ $page = <<<EOBODY
                         <li><a href="#" data-toggle="modal" data-target="#registerModal">Register</a></li>
                     </ul>
                     <div class="col-sm-3 col-md-3 pull-right">
-                        <form class="navbar-form" role="search">
+                        <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    <button class="btn btn-default" type="submit" name="search"><i class="glyphicon glyphicon-search"></i></button>
                                 </div>
                             </div>
                         </form>
