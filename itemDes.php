@@ -70,7 +70,7 @@ $page = <<<EOBODY
                 <!-- Navigation Part 2 has main content of navigation bar -->
                 <div id="navbarcontent" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="main.php"><span class="glyphicon glyphicon-home"></span></a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
                         <li><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#registerModal">Register</a></li>
                     </ul>
