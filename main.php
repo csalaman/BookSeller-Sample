@@ -42,8 +42,10 @@ $page = <<<EOBODY
                 var password = document.getElementById("passwordLogin").value;
 
                 <!-- CHECK LOGIN USING DATABASE -->
-                if (username === "admin" && password === "password")
+                if (username === "admin" && password === "password") {
+                    header("refresh:0; url=portal.php");
                     document.getElementById("updateLogin").innerHTML = "Successful login.";
+                }
                 else document.getElementById("updateLogin").innerHTML = "Invalid username and/or password.";
             }
 
