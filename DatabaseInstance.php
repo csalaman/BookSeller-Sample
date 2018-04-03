@@ -192,6 +192,28 @@ class DatabaseInstance
             return null;
         }
     }
+    
+    function getItemsWithSearch($search) {
+        if($this->table_name == "items"){
+            $query = "SELECT * FROM items WHERE item_name like '%{$search}%' or item_description like '%{$search}%'";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Data Retrieve failed: " . $this->db_connect->error);
+            } else {
+                if ($result->num_rows > 0) {
+                    $data = array();
+                    while ($row = $result->fetch_assoc()) {
+                        array_push($data,$row);
+                    }
+                    return $data;
+                }else{
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
 
 
 }
