@@ -1,14 +1,45 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: csalaman
- * Date: 3/21/2018
- * Time: 10:56 PM
- */
 
-    /* Do the DB stuff later HERE and append to doc below*/
+require_once("support.php");
+require_once("dbAccessInfo.php");
+require_once("DatabaseInstance.php");
 
-    $body = <<< EOBODY
+$bookList = "";
+
+if(isset($_POST["search"])) {
+    $search = $_POST["srch-term"];
+    $data = $items_table->getItemsWithSearch($search);
+    if(!$data) {
+        $bookList .= "No results returned";
+    } else {
+        foreach($data as $item) {
+            $name = $item['item_name'];
+            $desc = $item['item_description'];
+            $id = $item['item_id'];
+            $bookList .= <<<EOBODY
+                <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
+                    <p class="mb-1">$desc</p>
+                </a>
+EOBODY;
+        }
+    }
+} else {
+     $data = $items_table->getAllData();
+     foreach($data as $item) {
+         $name = $item['item_name'];
+         $desc = $item['item_description'];
+         $id = $item['item_id'];
+         $bookList .= <<<EOBODY
+             <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
+                 <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
+                 <p class="mb-1">$desc</p>
+             </a>
+EOBODY;
+     }
+}
+
+$body = <<< EOBODY
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,28 +49,6 @@
         <link rel="icon" href="bootstrap/images/book.png">
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="bootstrap/css/mainstyle.css">
-
-        <script>
-            function validateLogin() {
-                var username = document.getElementById("usernameLogin").value;
-                var password = document.getElementById("passwordLogin").value;
-
-                <!-- CHECK LOGIN USING DATABASE -->
-                if (username === "admin" && password === "password")
-                    document.getElementById("updateLogin").innerHTML = "Successful login.";
-                else document.getElementById("updateLogin").innerHTML = "Invalid username and/or password.";
-            }
-
-            function validateRegister() {
-                var username = document.getElementById("usernameRegister").value;
-                var password = document.getElementById("passwordRegister").value;
-                var name = document.getElementById("nameRegister").value;
-                var email = document.getElementById("emailRegister").value;
-
-                <!-- CHECK THAT USERNAME AND EMAIL HAVE NOT ALREADY BEEN REGISTERED -->
-                document.getElementById("updateRegister").innerHTML = "Successful register.";
-            }
-        </script>
     </head>
 
     <body>
@@ -58,16 +67,15 @@
                 <!-- Navigation Part 2 has main content of navigation bar -->
                 <div id="navbarcontent" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#registerModal">Register</a></li>
+                        <li><a href="main.php"><span class="glyphicon glyphicon-home"></span></a></li>
+                        <li><a href="main.php">Home</a></li>
                     </ul>
                     <div class="col-sm-3 col-md-3 pull-right">
-                        <form class="navbar-form" role="search">
+                        <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    <button class="btn btn-default" type="submit" name="search"><i class="glyphicon glyphicon-search"></i></button>
                                 </div>
                             </div>
                         </form>
@@ -76,11 +84,21 @@
             </div>
         </nav>
 
-</body>
+        <header>
+            <h1>My Books</h1><hr>
+        </header>
+
+        <div class="list-group">
+            $bookList
+        </div>
+
+        <script src="bootstrap/jquery-3.3.1.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+
+        <footer>Copyright &copy; Book Sellers</footer>
+    </body>
 </html>
 EOBODY;
 
-    echo $body;
-
-
+echo $body;
 ?>
