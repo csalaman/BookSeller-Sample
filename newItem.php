@@ -11,7 +11,7 @@ session_start();
 
 
 // TO REMOVE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-$_SESSION['username'] = "carlos@me.com";
+//$_SESSION['username'] = "carlos@me.com";
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 $seller = $_SESSION['username'];
@@ -91,13 +91,14 @@ HTML;
 
 
 if(isset($_POST['book_name'])){
-    $items_table->insert([$_POST['book_name'],'cmsc398n.jpg',$_SESSION['username'],$_POST['book_description'],floatval($_POST['price']),0,'None',(string)getdate()]);
+    $items_table->insert([$_POST['book_name'],'cmsc398n.jpg',$_SESSION['username'],$_POST['book_description'],floatval($_POST['price']),0,'None',date(DATE_RFC822)]);
     $echo = <<<HTML
 <script>
     alert("You have successfully submitted an item!")
 </script>
+    
 HTML;
     echo $echo;
-}else{
-    echo $html;
 }
+
+echo $html;
