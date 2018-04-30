@@ -57,6 +57,9 @@ $body = <<< EOBODY
 
         <div class="list-group">
             $bookList
+            <form action="newItem.php" method="get">
+                <input class='btn-lg' type="submit" value="New Book Submission"/>
+            </form>
         </div>
 
         <script src="bootstrap/jquery-3.3.1.min.js"></script>
