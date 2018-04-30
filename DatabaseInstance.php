@@ -92,6 +92,28 @@ class DatabaseInstance
         }
     }
 
+    function getBooks($username) {
+        if($this->table_name == "items") {
+            $query = "SELECT * from items where item_seller = '$username'";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Unable to find any items: " . $this->db_connect->error);
+            } else {
+                if ($result->num_rows > 0) {
+                    $data = array();
+                    while ($row = $result->fetch_assoc()) {
+                        array_push($data,$row);
+                    }
+                    return $data;
+                }else{
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
     // Updates an entry, hash table for 'items' or 'users' tables; attribute => new value
     function update($attributes)
     {

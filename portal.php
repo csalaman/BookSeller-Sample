@@ -5,6 +5,9 @@ require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
 
 
+error_reporting(E_ERROR | E_PARSE);
+
+
 $body = <<< EOBODY
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +38,7 @@ $body = <<< EOBODY
                     <ul class="nav navbar-nav">
                         <li><a href="main.php"><span class="glyphicon glyphicon-home"></span></a></li>
                         <li><a href="main.php">Home</a></li>
+                        <li><a href="devOps.php">P&C</a></li>
                     </ul>
                     <div class="col-sm-3 col-md-3 pull-right">
                         <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
