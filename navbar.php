@@ -31,7 +31,7 @@ function navbar() {
                             <li><a href="devOps.php">P&C</a></li>
                         </ul>
                         <div class="col-sm-3 col-md-3 pull-right">
-                            <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
+                            <form class="navbar-form" role="search" action="main.php" method="post">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
                                     <div class="input-group-btn">
