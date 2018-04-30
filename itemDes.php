@@ -30,6 +30,8 @@ if(isset($_GET['id'])) {
     $id = $_GET['id'];
     $database = new DatabaseInstance($host, $user, $password, $database, "items");
     $item = $database->getItemById($id);
+    $seller = $user_table->getUserById($item['item_seller']);
+    $subject = urlencode("I would like to purchase " . $item['item_name']);
 } else {
     header("Location: main.php");
 }
@@ -94,9 +96,10 @@ $page = <<<EOBODY
                 <h3 class="my-3">Post Date</h3>
                 <p>$item[item_post_date]</p>
                 <h3 class="my-3">Seller</h3>
-                <p>$item[item_seller]</p>
+                <p>$seller[name]</p>
                 <h3 class="my-3">Price</h3>
                 <p>$$item[item_price]</p>
+                <a href="mailto:$seller[username]?Subject=$subject"><h3 class="my-3">Contact Seller</h3></a>
             </div>
         </div>
 
