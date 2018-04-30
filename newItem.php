@@ -67,14 +67,16 @@ $html =<<<HTML
         </header>
         
 
-        <div class="list-group text-center">
+        <div class="list-group">
            <form action="{$_SERVER['PHP_SELF']}" method="post">
                 <strong>Name</strong><br><input type="text" class='input-sm ' name="book_name" /><br><br>
                 <strong>Description</strong><br>
                 <textarea name="book_description" cols='30' class="input-lg"></textarea><br><br>
-                <strong>Price($):</strong>
-                <input type="text" name="price" class="input-sm"/><br><br><br><br>
-                <input type="submit" class="btn-lg" value="Post For Sell"/>
+                <strong>Price($)</strong><br>
+                <input type="text" name="price" class="input-sm"/><br><br><br>
+                <strong>Image(Optional):</strong><input type="file" name="image_file" class="input-lg btn-lg " />
+                <br><br>
+                <input type="submit" class="btn-lg" value="Post For Sell"/><br><br><br>
            </form>
         </div>
 
@@ -91,7 +93,7 @@ HTML;
 
 
 if(isset($_POST['book_name'])){
-    $items_table->insert([$_POST['book_name'],'cmsc398n.jpg',$_SESSION['username'],$_POST['book_description'],floatval($_POST['price']),0,'None',date(DATE_RFC822)]);
+    $items_table->insert([$_POST['book_name'],$_POST['image_file'],$_SESSION['username'],$_POST['book_description'],floatval($_POST['price']),0,'None',date(DATE_RFC822)]);
     $echo = <<<HTML
 <script>
     alert("You have successfully submitted an item!")
