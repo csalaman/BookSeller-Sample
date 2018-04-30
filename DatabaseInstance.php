@@ -71,6 +71,26 @@ class DatabaseInstance
             return null;
         }
     }
+    
+    function loginUser($username, $password) {
+        if($this->table_name == "users") {
+            $query = "SELECT * from users where username = '$username'";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Unable to find user: " . $this->db_connect->error);
+            } else {
+                $user = $result->fetch_assoc();
+                if(password_verify($password, $user['password'])) {
+                    unset($user['password']);
+                    return $user;
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
 
     // Updates an entry, hash table for 'items' or 'users' tables; attribute => new value
     function update($attributes)
@@ -106,8 +126,6 @@ class DatabaseInstance
             }
 
         }
-
-
 
     }
 

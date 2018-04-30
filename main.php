@@ -49,6 +49,33 @@ $page = <<<EOBODY
         <link rel="icon" href="bootstrap/images/book.png">
         <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="bootstrap/css/mainstyle.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+			$(document).ready(function() {
+                $('#loginform').submit(function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                       type: "POST",
+                       url: 'login.php',
+                       data: $(this).serialize(),
+                       success: function(data)
+                       {
+                          if (data === 'success') {
+                              var path = window.location.pathname;
+                              path = path.substring(0, path.lastIndexOf("/"));
+                              path = path + '/portal.php';
+                              window.location = path;
+                          }
+                          else {
+                            alert('Invalid Credentials');
+                          }
+                       }
+                    });
+                });
+
+            });
+		</script>
     </head>
 
     <body>
@@ -93,7 +120,7 @@ $page = <<<EOBODY
                         <h4 class="modal-title">Login</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="login.php" method="post">
+                        <form method="post" id="loginform">
                             <p>
                                 <div class="form-group">
                                     <label for="usernameLogin">Email:</label>
