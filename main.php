@@ -6,17 +6,18 @@ require_once("DatabaseInstance.php");
 
 $bookList = "";
 
-if(isset($_POST["search"])) {
+if (isset($_POST["search"])) {
     $search = $_POST["srch-term"];
     $data = $items_table->getItemsWithSearch($search);
-    if(!$data) {
+    if (!$data) {
         $bookList .= "No results returned";
     } else {
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $name = $item['item_name'];
             $desc = $item['item_description'];
             $id = $item['item_id'];
-            $bookList .= <<<EOBODY
+            $bookList
+                .= <<<EOBODY
                 <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
                     <p class="mb-1">$desc</p>
@@ -26,11 +27,12 @@ EOBODY;
     }
 } else {
     $data = $items_table->getAllData();
-    foreach($data as $item) {
+    foreach ($data as $item) {
         $name = $item['item_name'];
         $desc = $item['item_description'];
         $id = $item['item_id'];
-        $bookList .= <<<EOBODY
+        $bookList
+            .= <<<EOBODY
             <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
                 <p class="mb-1">$desc</p>
@@ -39,7 +41,8 @@ EOBODY;
     }
 }
 
-$page = <<<EOBODY
+$page
+    = <<<EOBODY
 <!DOCTYPE html>
 <html lang="en">
 
@@ -74,6 +77,27 @@ $page = <<<EOBODY
                     });
                 });
 
+                $('#registerform').submit(function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                       type: "POST",
+                       url: 'newUser.php',
+                       data: $(this).serialize(),
+                       success: function(data)
+                       {
+                          if (data === 'success') {
+                              var path = window.location.pathname;
+                              path = path.substring(0, path.lastIndexOf("/"));
+                              path = path + '/portal.php';
+                              window.location = path;
+                          }
+                          else if (data === 'duplicate'){
+                              alert('Username already taken');
+                          }
+                       }
+                    });
+                });
             });
 		</script>
     </head>
@@ -154,7 +178,7 @@ $page = <<<EOBODY
                         <h4 class="modal-title">Register</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="newUser.php" method="post">
+                        <form  method="post" id="registerform">
                             <p>
                                 <div class="form-group">
                                     <label for="nameRegister">Name:</label>

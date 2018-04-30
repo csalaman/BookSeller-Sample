@@ -12,7 +12,17 @@ $password = $_POST["passwordRegister"];
 
 $result = $user_table->registerUser($name, $username, $password);
 if (!$result) {
-    echo $user_table->getErrno(); //1062 is duplicate user
-} else header("Location: portal.php");
+    switch ($user_table->getErrno()) {
+        case 1062:
+            echo ("duplicate");
+            break;
+        default:
+            echo $user_table->getErrno();
+            break;
+    }
+} else {
+    $_SESSION['username'] = $username;
+    echo ("success");
+}
 
 ?>
