@@ -11,7 +11,7 @@ session_start();
 
 
 // TO REMOVE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//$_SESSION['username'] = "carlos@me.com";
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 $seller = $_SESSION['username'];
