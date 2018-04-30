@@ -38,7 +38,7 @@ if (isset($_SESSION['username'])) {
 }
 
 $data2 = $items_table->getBooks($u);
-
+error_reporting(E_ERROR | E_PARSE);
 foreach($data2 as $item2) {
     $name = $item2['item_name'];
     preg_match_all('!\d+!', $name, $matches, PREG_PATTERN_ORDER);
@@ -62,7 +62,7 @@ EOBODY;
 
 }
 $score = ($sumName * $sumPrice) / 20000;
-
+error_reporting(E_ERROR | E_PARSE);
 $list .= <<<EOBODY
             <tr>
                 <td>&nbsp;</td>
