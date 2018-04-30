@@ -29,7 +29,7 @@ class DatabaseInstance
     {
         if($this->table_name == "users"){
             $pass_hash = password_hash($attributes['password'],PASSWORD_DEFAULT);
-            $query = "INSERT INTO $this->table_name VALUES ('{$attributes['username']}','{$pass_hash}')";
+            $query = "INSERT INTO $this->table_name (name, username, password) VALUES ('{$attributes['name']}','{$attributes['username']}','{$pass_hash}')";
             $result = $this->db_connect->query($query);
             if(!$result){
                 die("Insertion to table ".$this->table_name." failed: ". $this->db_connect->error);
@@ -54,6 +54,21 @@ class DatabaseInstance
             }else{
                 return True;
             }
+        }
+    }
+    
+    function registerUser($name, $username, $password) {
+        if($this->table_name == "users"){
+            $pass_hash = password_hash($password,PASSWORD_DEFAULT);
+            $query = "INSERT INTO $this->table_name (name, username, password) VALUES ('{$name}','{$username}','{$pass_hash}')";
+            $result = $this->db_connect->query($query);
+            if(!$result){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return null;
         }
     }
 
@@ -193,6 +208,21 @@ class DatabaseInstance
         }
     }
     
+    function getUserById($id)
+    {
+        if($this->table_name == "users"){
+            $query = "SELECT * FROM users WHERE user_id = '{$id}'";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Unable to retrieve item id: " . $this->db_connect->error);
+            } else {
+                return $result->fetch_assoc();
+            }
+        } else {
+            return null;
+        }
+    }
+    
     function getItemsWithSearch($search) {
         if($this->table_name == "items"){
             $query = "SELECT * FROM items WHERE item_name like '%{$search}%' or item_description like '%{$search}%'";
@@ -213,6 +243,10 @@ class DatabaseInstance
         } else {
             return null;
         }
+    }
+    
+    function getErrno() {
+        return $this->db_connect->errno;
     }
 
 
