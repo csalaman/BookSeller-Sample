@@ -3,10 +3,11 @@
 require_once("support.php");
 require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
-
+require_once("navbar.php");
 
 error_reporting(E_ERROR | E_PARSE);
 
+$navbar = navbar();
 
 $body = <<< EOBODY
 <!DOCTYPE html>
@@ -21,38 +22,7 @@ $body = <<< EOBODY
     </head>
 
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <!-- Navigation Part 1-->
-                <div class="navbar-header">
-                    <!-- button visible when navbar collapses -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarcontent">
-                        <!-- displaying icon representing button -->
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <!-- Navigation Part 2 has main content of navigation bar -->
-                <div id="navbarcontent" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="main.php"><span class="glyphicon glyphicon-home"></span></a></li>
-                        <li><a href="main.php">Home</a></li>
-                        <li><a href="devOps.php">P&C</a></li>
-                    </ul>
-                    <div class="col-sm-3 col-md-3 pull-right">
-                        <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" name="search"><i class="glyphicon glyphicon-search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        $navbar
 
         <header>
             <h1>My Books</h1><hr>
