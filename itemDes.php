@@ -4,34 +4,19 @@ require_once("support.php");
 require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
 
-$bookList = "";
-
-if(isset($_POST["search"])) {
-    $search = $_POST["srch-term"];
-    $data = $items_table->getItemsWithSearch($search);
-    if(!$data) {
-        $bookList .= "No results returned";
-    } else {
-        foreach($data as $item) {
-            $name = $item['item_name'];
-            $desc = $item['item_description'];
-            $id = $item['item_id'];
-            $bookList .= <<<EOBODY
-                <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
-                    <p class="mb-1">$desc</p>
-                </a>
-EOBODY;
-        }
-    }
-}
+session_start();
 
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
-    $database = new DatabaseInstance($host, $user, $password, $database, "items");
-    $item = $database->getItemById($id);
+    $item = $items_table->getItemById($id);
     $seller = $user_table->getUserById($item['item_seller']);
     $subject = urlencode("I would like to purchase " . $item['item_name']);
+    $contact = "";
+    if($seller['username'] === $_SESSION['username']) {
+        $contact = "<a href=\"deleteItem.php?item_id=$id\"><h3 class=\"my-3\">Delete Item</h3></a>";
+    } else {
+        $contact = "<a href=\"mailto:$seller[username]?Subject=$subject\"><h3 class=\"my-3\">Contact Seller</h3></a>";
+    }
 } else {
     header("Location: main.php");
 }
@@ -99,7 +84,7 @@ $page = <<<EOBODY
                 <p>$seller[name]</p>
                 <h3 class="my-3">Price</h3>
                 <p>$$item[item_price]</p>
-                <a href="mailto:$seller[username]?Subject=$subject"><h3 class="my-3">Contact Seller</h3></a>
+                $contact
             </div>
         </div>
 

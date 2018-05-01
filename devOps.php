@@ -3,29 +3,11 @@
 require_once("support.php");
 require_once("dbAccessInfo.php");
 require_once("DatabaseInstance.php");
-session_start();
+require_once('navbar.php');
+
+$navbar = navbar();
 
 $bookList = "";
-
-if(isset($_POST["search"])) {
-    $search = $_POST["srch-term"];
-    $data = $items_table->getItemsWithSearch($search);
-    if(!$data) {
-        $bookList .= "No results returned";
-    } else {
-        foreach($data as $item) {
-            $name = $item['item_name'];
-            $desc = $item['item_description'];
-            $id = $item['item_id'];
-            $bookList .= <<<EOBODY
-                <a href="itemDes.php?id=$id" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">$name</h5></div>
-                    <p class="mb-1">$desc</p>
-                </a>
-EOBODY;
-        }
-    }
-}
 
 $sumPrice = 0;
 $sumName = 0;
@@ -34,10 +16,12 @@ $match = 0;
 
 $u = "";
 if (isset($_SESSION['username'])) {
+    
     $u = $_SESSION['username'];
 }
 
-$data2 = $items_table->getBooks($u);
+$seller = $user_table->getUserByUsername($_SESSION['username']);
+$data2 = $items_table->getBooks($seller['user_id']);
 error_reporting(E_ERROR | E_PARSE);
 foreach($data2 as $item2) {
     $name = $item2['item_name'];
@@ -84,38 +68,7 @@ $page = <<<EOBODY
     </head>
 
     <body style="margin-top: 50px;">
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <!-- Navigation Part 1-->
-                <div class="navbar-header">
-                    <!-- button visible when navbar collapses -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarcontent">
-                        <!-- displaying icon representing button -->
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <!-- Navigation Part 2 has main content of navigation bar -->
-                <div id="navbarcontent" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="main.php"><span class="glyphicon glyphicon-home"></span></a></li>
-                        <li><a href="main.php">Home</a></li>
-                        <li><a href="portal.php">Portal</a></li>
-                    </ul>
-                    <div class="col-sm-3 col-md-3 pull-right">
-                        <form class="navbar-form" role="search" action="{$_SERVER["PHP_SELF"]}" method="post">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" name="search"><i class="glyphicon glyphicon-search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        $navbar
 
         <div style="margin-bottom: 20px;">
             <table style="width:25%">

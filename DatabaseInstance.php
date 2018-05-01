@@ -92,9 +92,9 @@ class DatabaseInstance
         }
     }
 
-    function getBooks($username) {
+    function getBooks($id) {
         if($this->table_name == "items") {
-            $query = "SELECT * from items where item_seller = '$username'";
+            $query = "SELECT * from items where item_seller = '$id'";
             $result = $this->db_connect->query($query);
             if (!$result) {
                 die("Unable to find any items: " . $this->db_connect->error);
@@ -221,7 +221,7 @@ class DatabaseInstance
     function getUserByUsername($username)
     {
         if($this->table_name == "users"){
-            $query = "SELECT * FROM user WHERE email = '{$username}'";
+            $query = "SELECT * FROM users WHERE username = '{$username}'";
             $result = $this->db_connect->query($query);
             if (!$result) {
                 die("Unable to retrieve username: " . $this->db_connect->error);
@@ -289,6 +289,17 @@ class DatabaseInstance
         return $this->db_connect->errno;
     }
 
+    function deleteItemById($id) {
+        if($this->table_name == "items"){
+            $query = "DELETE FROM items WHERE item_id = $id";
+            $result = $this->db_connect->query($query);
+            if (!$result) {
+                die("Data Retrieve failed: " . $this->db_connect->error);
+            }
+        } else {
+            return null;
+        }
+    }
 
 }
 
